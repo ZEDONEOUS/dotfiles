@@ -1,0 +1,206 @@
+# -------------------------------- #
+# CONFIGURATIONS i3-gap 
+# -------------------------------- #
+
+set $mod Mod1
+set $sup Mod4
+for_window [class="^.*"] border pixel 1
+gaps inner 10
+gaps outer 10
+set $term --no-startup-id $TERMINAL'
+
+# -------------------------------- #
+# COLOR VARIABLES
+# -------------------------------- #
+
+set $bg-color               #2f343f
+set $inactive-bg-color      #2f343f
+set $text-color             #f3f4f5
+set $inactive-text-color    #676E7D
+set $urgent-bg-color        #E53935
+set $border-color           #757575
+
+# -------------------------------- #
+# AUDIO CONTROLS
+# -------------------------------- #
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +10% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -10% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# -------------------------------- #
+# MEDIA PLAYER CONTROLS
+# -------------------------------- #
+
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# -------------------------------- #
+# SCREEN BRIGHT CONTROLS
+# -------------------------------- #
+
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+
+# -------------------------------- #
+# TOUCHPAD CONTROLS
+# -------------------------------- #
+
+bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
+
+# -------------------------------- #
+# CONFIGURATION FONT
+# -------------------------------- #
+
+font pango:"System San Francisco Display Regular 20"
+
+# -------------------------------- #
+# WORKSPACE
+# -------------------------------- #
+
+# --> Workspace Names
+set $ws1 " 1: Terminal    "
+set $ws2 " 2: Firefox    "
+set $ws3 " 3: Files    "
+set $ws4 " 4  "
+set $ws5 " 5  "
+set $ws6 " 6  "
+set $ws7 " 7  "
+set $ws8 " 8  "
+set $ws9 " 9  "
+set $ws10 " 10: Spotify   "
+
+# --> Alternate Workspaces
+bindsym $mod+Control+l workspace next
+bindsym $mod+Control+h  workspace prev
+
+# --> Switch Workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# --> Move Focused Workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# --> Autoload Workspace Apps 
+for_window [class="Spotify"] move to workspace $ws10
+for_window [class="Firefox"] move to workspace $ws2
+for_window [class="Thunar"] move to workspace $ws3
+
+# -------------------------------- #
+# BINDSYSTEM
+# -------------------------------- #
+
+# --> Reload Config File
+bindsym $mod+Shift+c reload
+
+# --> Restart i3
+bindsym $mod+Shift+r restart
+
+# --> Exit Session
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# --> Start Terminal
+bindsym $mod+Return exec gnome-terminal
+
+# --> Kill Window
+bindsym $mod+Shift+q kill
+
+# --> Start Menu
+bindsym $mod+d exec rofi -show run -lines 5 -opacity "80" -display-run ">"
+
+# --> Focus Window
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# --> Move Window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# --> Splits 
+bindsym $mod+t split toggle
+
+# --> Fullscreen Toggle
+bindsym $mod+f fullscreen toggle
+
+# --> Move Floating Windows
+floating_modifier $mod
+
+# --> Toggle Floating Tilling Windows
+bindsym $mod+Shift+space floating toggle
+
+# -------------------------------- #
+# APPS ON START
+# -------------------------------- 
+
+# --> Terminal
+exec gnome-terminal
+
+# --> Thunar Files
+exec thunar
+
+# --> Spotify
+exec snap run spotify
+
+# --> Firefox
+exec firefox
+
+# --> Set Wallpaper
+exec_always feh --bg-scale /usr/share/backgrounds/illyria-default.jpg
+
+# --> Set Opacity Compton
+exec compton -f
+
+# resize window (you can also use the mouse for that)
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+        bindsym l resize grow width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym h resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+
+bar {
+    font pango: System San Francisco Display, FontAwesome 11
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    colors{
+        background $bg-color
+        separator #757575
+        #                   BORDER              BACKGROUND          TEXT        
+        focused_workspace   $bg-color           $bg-color           $text-color
+        inactive_workspace  $inactive-bg-color  $inactive-bg-color  $inactive-text-color
+        urgent_workspace    $urgent-bg-color    $urgent-bg-color    $text-color
+    }
+}
