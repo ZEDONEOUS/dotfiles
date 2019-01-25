@@ -1,0 +1,66 @@
+/* This theme is intended for a simple display of a 5
+ * items vertical list on a 1366x768 resolution.
+ */
+* {
+    background:       #21272D; /* Fondo cuadro rofi */
+    main-color:       #DADBDD; /* Fondo titulo - Borde seleccion - Texto seleccion */
+    foreground:       #F8F1E5; /* Texto no seleccionados */
+    background-alt:   #33444E; /* Fondo no seleccionados */
+    background-light: #A33A47; /* Fondo seleccionado */
+
+    /* Base values for all */
+    background-color: @background;
+    text-color:       @foreground;
+}
+
+window {
+    padding: 1.5%;
+}
+
+/* Input window */
+inputbar,
+prompt,
+textbox-prompt-colon,
+entry {
+    background-color: @background-alt;
+}
+
+inputbar {
+    children: [prompt, textbox-prompt-colon, entry];
+    margin: 4px 0px;
+}
+
+prompt {
+    padding: 8px 15px;
+    background-color: @main-color;
+    text-color: @background;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: ":  ";
+    padding: 7px;
+}
+
+entry {
+    text-color: @main-color;
+    padding: 7px 7px 7px 0px;
+}
+
+/* List of entries */
+element {
+    padding: 8px;
+    margin: 3px 0px;
+    border: 0px 0px 0px 8px;
+}
+
+element.normal {
+    background-color: @background-alt;
+    border-color: @background-alt;
+}
+
+element.selected {
+    background-color: @background-light;
+    text-color: @main-color;
+    border-color: @main-color;
+}

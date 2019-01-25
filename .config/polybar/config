@@ -1,0 +1,278 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+
+[colors]
+background              = #00000000
+background-light        = #424242
+
+foreground              = #555555
+foreground-light        = #bcbcbc
+foreground-light-hard   = #bcbcbc
+foreground-dark         = #555555
+
+normal-state            = #7986cb
+warning-state           = #ffb74d
+alert-state             = #ef534e
+
+[fonts]
+; The default font to use for text
+text                = Hurmit Nerd Font:style=bold:pixelsize=7;1
+; Used for the % character and the colored small text
+text-small          = DejaVu Sans:style=bold:pixelsize=6;2
+; Used for the workspaces numbers
+text-small-up       = DejaVu Sans:style=bold:pixelsize=5;-4
+; Icons to use on the bar right
+icons-rb            = Hurmit Nerd Font:style=regular:pixelsize=8;1
+; Icons to use on the bar left
+icons-lb            = Hurmit Nerd Font:style=regular:pixelsize=10;1
+; For the VPN logo
+icons-fa-small      = Hurmit Nerd Font:style=regular:pixelsize=6;4
+; Font used for the distro module (the distro logo) and a few other icons
+icons-nf            = Hurmit Nerd Font:pixelsize=11;2
+
+
+[bar/example]
+width               = 100%
+height              = 25
+radius              = 0.0
+fixed-center        = false
+monitor             = ${env:MONITOR:}
+
+background          = ${colors.background}
+foreground          = ${colors.foreground}
+
+line-size           = 1
+line-color          = ${colors.foreground}
+
+border-size         = 7
+border-color        = ${colors.background}
+
+padding-left        = 0
+padding-right       = 1
+
+module-margin-left  = 2
+module-margin-right = 2
+
+font-0              = ${fonts.text}
+font-1              = ${fonts.text-small}
+font-2              = ${fonts.icons-rb}
+font-3              = ${fonts.icons-lb}
+font-4              = ${fonts.icons-fa-small}
+font-5              = ${fonts.text-small-up}
+
+modules-left        = i3
+modules-right       = pulseaudio spotify cpu eth battery date powermenu
+separator           = "|"
+
+tray-position       = right
+cursor-click        = pointer
+tray-detached       = false
+tray-maxsize        = 12
+tray-background     = ${colors.background}
+tray-offset-y       = -1
+tray-scale          = 1.0
+
+[module/xwindow]
+type                = internal/xwindow
+label               = %title:0:30:...%
+
+[module/filesystem]
+type                        = internal/fs
+interval                    = 25
+mount-0                     = /
+
+label-mounted               =    %percentage_used%%
+label-unmounted             = %mountpoint% not mounted
+label-unmounted-foreground  = ${colors.foreground-alt}
+
+[module/i3]
+type                = internal/i3
+format              = <label-state>
+index-sort          = true
+wrapping-scroll     = false
+pin-workspaces      = true
+strip-wsnumbers     = true
+
+; Active workspaces
+label-focused               = " %{T4}%name% %{T6}#%index%"
+label-focused-background    = ${colors.background-light}
+label-focused-foreground    = ${colors.foreground-light}
+label-focused-underline     = ${colors.warning-state}
+label-focused-padding       = 3
+
+; Visible workspaces
+label-visible               = " %{T4}%name% %{T6}#%index%"
+label-visible-background    = ${colors.background}
+label-visible-foreground    = ${colors.foreground}
+label-visible-padding       = 3
+
+; Inactive workspaces
+label-unfocused             = " %{T4}%name% %{T6}#%index%"
+label-unfocused-background  = ${colors.background}
+label-unfocused-foreground  = ${colors.foreground}
+label-unfocused-padding     = 3
+
+; Workspaces with urgency hint
+label-urgent                = " %{T4}%name% %{T6}#%index%"
+label-urgent-background     = ${colors.background}
+label-urgent-foreground     = ${colors.foreground-light}
+label-urgent-padding        = 3
+
+[module/spotify]
+type                = custom/script
+interval            = 1
+format-prefix       = "  "
+format              = <label>
+exec                = python ~/.config/polybar/polybar-spotify/spotify_status.py -f '{artist}  ||  {song}'
+format-underline    = #1db954
+format-foreground   = ${colors.foreground-light}
+
+[module/cpu]
+type                      = internal/cpu
+interval                  = 5
+label                     = %percentage:2%%
+format-prefix             = "%{T3} "
+format-prefix-foreground  = ${colors.foreground-light}
+format-underline          = ${colors.alert-state}
+format-foreground           = ${colors.foreground-light}
+
+[module/wlan]
+type                            = internal/network
+interface                       = wlp2s0
+interval                        = 3.0
+label-padding                   = 15
+
+format-connected                = <label-connected>
+format-connected-underline      = ${colors.normal-state}
+label-connected                 = %{T3}  %{T1}%essid%
+label-connected-foreground      = ${colors.foreground-light}
+
+format-disconnected             = <label-disconnected>
+format-disconnected-underline   = ${self.format-connected-underline}
+label-disconnected              = %ifname% disconnected
+label-disconnected-foreground   = ${colors.foreground}
+
+
+[module/date]
+type                = internal/date
+interval            = 1
+format              = <label>
+label               = %date% %time%
+
+format-background   = ${colors.background}
+format-underline    = ${colors.normal-state}
+format-foreground   = ${colors.foreground-light}
+
+time                = "%H:%M "
+time-alt            = %H:%M:%S
+
+date                =
+date-alt            = "  %d/%m/%Y"
+
+[module/pulseaudio]
+type                        = internal/pulseaudio
+interval                    = 1
+
+format-volume               = <label-volume> <bar-volume>
+label-volume                = %{T3}
+label-volume-foreground     = ${colors.foreground-light}
+
+label-muted                 = MUTED %{T4}%{T5}
+label-muted-foreground      = ${colors.foreground-light}
+
+bar-volume-width            = 8
+bar-volume-foreground-0     = #55aa55
+bar-volume-foreground-1     = #55aa55
+bar-volume-foreground-2     = #55aa55
+bar-volume-foreground-3     = #55aa55
+bar-volume-foreground-4     = #55aa55
+bar-volume-foreground-5     = #f5a70a
+bar-volume-foreground-6     = #ff5555
+bar-volume-gradient         = true 
+bar-volume-indicator        = |
+bar-volume-indicator-font   = 1
+bar-volume-fill             = %{T1}-
+bar-volume-fill-font        = 1
+bar-volume-empty            = %{T1}-
+bar-volume-empty-font       = 1
+bar-volume-empty-foreground = ${colors.foreground-light}
+
+[module/battery]
+type                            = internal/battery
+
+full-at                         = 95
+battery                         = BAT1
+adapter                         = ACAD
+poll-interval                   = 5
+
+format-charging                 = <animation-charging> <label-charging>
+label-charging                  = %percentage%%
+format-charging-underline       = ${colors.warning-state}
+format-charging-foreground      = ${colors.foreground-light}
+
+format-discharging              = <ramp-capacity> <label-discharging>
+label-discharging               = %percentage%%
+format-discharging-underline    = ${colors.warning-state}
+format-discharging-foreground   = ${colors.foreground-light}
+
+format-full                     = <ramp-capacity> <label-full>
+label-full                      = %percentage%%
+format-full-underline           = ${colors.normal-state}
+format-full-foreground          = ${colors.foreground-light}
+
+ramp-capacity-0                 = 
+ramp-capacity-1                 = 
+ramp-capacity-2                 = 
+ramp-capacity-3                 = 
+ramp-capacity-4                 = 
+
+animation-charging-0            = 
+animation-charging-1            = 
+animation-charging-2            = 
+animation-charging-3            = 
+animation-charging-4            = 
+
+animation-charging-framerate    = 750
+
+[module/powermenu]
+type                = custom/text
+content             = " %{T3} "
+
+content-background  = ${colors.alert-state}
+content-foreground  = #000
+
+click-left           = sh $HOME/.scripts/rofi_power_menu.sh
+click-right          = sh $HOME/.scripts/rofi_power_menu.sh
+
+[settings]
+screenchange-reload     = true
+pseudo-transparency     = false
+
+[global/wm]
+margin-top              = 5
+margin-bottom           = 5
+
+[module/eth]
+type                    = internal/network
+interface               = eno1
+interval                = 3.0
+
+format-connected-underline          = #55aa55
+format-connected-prefix             = " "
+format-connected-prefix-foreground  = ${colors.foreground-alt}
+label-connected                     = %local_ip%
