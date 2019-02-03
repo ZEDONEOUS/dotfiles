@@ -1,0 +1,4 @@
+  VteTerminal, vte-terminal {
+      padding: 10px;
+      -GtkWidget-cursor-aspect-ratio: 0.15;
+  }

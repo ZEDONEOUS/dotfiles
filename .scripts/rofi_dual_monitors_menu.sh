@@ -18,13 +18,13 @@ else
     )
 fi
 
-if [ "$selection" != "" ]; then
-    if echo $selection | grep "+"; then
-        xrandr --output "$extern" --mode "$extern_size" --pos 0x0 --output "$intern" --primary --mode "$intern_size" --pos "${x_offset}x0"
-    else
+case $selection in
+    "$intern")
         xrandr --output "$intern" --auto --output "$extern" --off
-    fi
-
-    i3-msg restart 
-fi
+        i3-msg restart 
+        ;;
+    "$intern + $extern")
+        xrandr --output "$extern" --mode "$extern_size" --pos 0x0 --output "$intern" --primary --mode "$intern_size" --pos "${x_offset}x0"
+        i3-msg restart 
+esac
 
